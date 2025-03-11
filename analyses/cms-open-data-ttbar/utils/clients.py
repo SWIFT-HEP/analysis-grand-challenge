@@ -44,6 +44,28 @@ def get_client(af="coffea_casa"):
 
         client = Client()
 
+    elif af == "dirac":
+        from dask_dirac import DiracCluster
+        from dask.distributed import Client
+
+        cluster = DiracCluster(
+                        scheduler_options={"port": 8786},
+                        dirac_sites="LCG.UKI-SOUTHGRID-RALPP.uk",
+                        cert_path="/users/ak18773/SWIFT_HEP/dev_dirac/diracos/etc/grid-security/certificates",
+                        owner_group="gridpp_user",
+                        user_proxy="/tmp/x509up_u397871",
+                        submission_url="https://diracdev.grid.hep.ph.ic.ac.uk:8444",
+                        container="docker://sameriksen/dask:cms_agc",
+                        nthreads=5,
+                    )   
+
+        cluster.scale(jobs=1)
+
+        print("Workers can take a while to connect. Please be patient.")
+        print(f"Cluster dashboard: {str(cluster.dashboard_link)}")
+
+        client = Client(cluster)
+
     else:
         raise NotImplementedError(f"unknown analysis facility: {af}")
 
