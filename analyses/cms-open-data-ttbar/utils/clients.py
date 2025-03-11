@@ -59,7 +59,7 @@ def get_client(af="coffea_casa"):
                         nthreads=5,
                     )   
 
-        cluster.scale(jobs=1)
+        cluster.scale(jobs=3)
 
         print("Workers can take a while to connect. Please be patient.")
         print(f"Cluster dashboard: {str(cluster.dashboard_link)}")
